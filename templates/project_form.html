@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{% if project %}Edit Project{% else %}New Project{% endif %} — Vault Partners{% endblock %}
+{% block page_title %}{% if project %}Edit Project{% else %}New Project{% endif %}{% endblock %}
+{% set active_page = 'new_project' %}
+
+{% block topbar_actions %}
+<a href="/dashboard" class="btn btn-outline btn-sm">← Back</a>
+{% endblock %}
+
+{% block content %}
+{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+
+<form method="POST" action="{% if project %}/projects/{{ project.id }}/edit{% else %}/projects/new{% endif %}" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-title">Project Details</div>
+        <div class="form-grid">
+            <div class="form-group span2">
+                <label>Title *</label>
+                <input type="text" name="title" value="{{ project.title if project else '' }}" placeholder="Project name" required>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <input type="text" name="category" value="{{ project.category if project else '' }}" placeholder="e.g. Real Estate, Finance">
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select name="status">
+                    <option value="active"   {% if project and project.status == 'active'   %}selected{% endif %}>Active</option>
+                    <option value="draft"    {% if project and project.status == 'draft'    %}selected{% endif %}>Draft</option>
+                    <option value="archived" {% if project and project.status == 'archived' %}selected{% endif %}>Archived</option>
+                </select>
+            </div>
+            <div class="form-group span2">
+                <label>Description</label>
+                <textarea name="description" placeholder="Describe this project...">{{ project.description if project else '' }}</textarea>
+            </div>
+            <div class="form-group span2">
+                <label>Tags <span style="font-weight:400; text-transform:none; letter-spacing:0;">(comma-separated)</span></label>
+                <input type="text" name="tags" value="{{ project.tags if project else '' }}" placeholder="investment, 2024, confidential">
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Upload Files</div>
+        <div id="drop-zone" style="border:1px dashed var(--border); padding:3rem; text-align:center; cursor:pointer; transition:all 0.15s;" onclick="document.getElementById('file-input').click()" onmouseover="this.style.borderColor='#999'" onmouseout="this.style.borderColor='var(--border)'">
+            <div style="font-size:1.2rem; font-weight:600; letter-spacing:-0.3px; margin-bottom:0.5rem;">Drop files here</div>
+            <div style="font-size:0.82rem; color:var(--text-muted);">or click to browse — any file type, up to 50MB each</div>
+            <input type="file" id="file-input" name="files" multiple style="display:none;" onchange="updateFileList()">
+        </div>
+        <div id="file-list" style="margin-top:0.8rem;"></div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:0.8rem;">
+        <a href="/dashboard" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-black">{% if project %}Save Changes{% else %}Create Project{% endif %}</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const dz = document.getElementById('drop-zone');
+const fi = document.getElementById('file-input');
+const fl = document.getElementById('file-list');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.background='var(--bg-2)'; dz.style.borderColor='#000'; });
+dz.addEventListener('dragleave', () => { dz.style.background=''; dz.style.borderColor='var(--border)'; });
+dz.addEventListener('drop', e => { e.preventDefault(); dz.style.background=''; dz.style.borderColor='var(--border)'; fi.files = e.dataTransfer.files; updateFileList(); });
+function fmt(b) { if(b<1024) return b+'B'; if(b<1048576) return (b/1024).toFixed(1)+'KB'; return (b/1048576).toFixed(1)+'MB'; }
+function updateFileList() {
+    const files = fi.files;
+    if (!files.length) { fl.innerHTML=''; return; }
+    let html = '';
+    for (const f of files) {
+        html += `<div class="file-item"><span class="file-icon">📎</span><div class="file-info"><div class="file-name">${f.name}</div><div class="file-meta">${fmt(f.size)}</div></div></div>`;
+    }
+    fl.innerHTML = html;
+}
+</script>
+{% endblock %}

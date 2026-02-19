@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - SECRET_KEY=local-dev-secret-change-in-production
+      - DATABASE_URL=sqlite:////app/data/vault.db
+      - BASE_URL=http://localhost:8080
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=
+      - SMTP_PASSWORD=
+      - EMAIL_FROM=noreply@vault-partners.eu
+    volumes:
+      # Persist uploads and DB between container restarts
+      - vault_uploads:/app/uploads
+      - vault_data:/app/data
+
+volumes:
+  vault_uploads:
+  vault_data:

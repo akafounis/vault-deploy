@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Vault Partners{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% set active_page = 'dashboard' %}
+
+{% block topbar_actions %}
+<a href="/projects/new" class="btn btn-black btn-sm">+ New Project</a>
+{% endblock %}
+
+{% block content %}
+{% set total_files = namespace(count=0) %}
+{% for p in projects %}{% set total_files.count = total_files.count + p.files|length %}{% endfor %}
+
+<!-- Stats -->
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:2rem;">
+    <div style="background:#fff; padding:1.8rem 2rem;">
+        <div style="font-size:2.5rem; font-weight:600; letter-spacing:-1px; line-height:1;">{{ projects|length }}</div>
+        <div style="font-size:0.7rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-top:0.5rem;">Total Projects</div>
+    </div>
+    <div style="background:#fff; padding:1.8rem 2rem;">
+        <div style="font-size:2.5rem; font-weight:600; letter-spacing:-1px; line-height:1;">{{ projects|selectattr('status','equalto','active')|list|length }}</div>
+        <div style="font-size:0.7rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-top:0.5rem;">Active</div>
+    </div>
+    <div style="background:#fff; padding:1.8rem 2rem;">
+        <div style="font-size:2.5rem; font-weight:600; letter-spacing:-1px; line-height:1;">{{ total_files.count }}</div>
+        <div style="font-size:0.7rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-top:0.5rem;">Files</div>
+    </div>
+</div>
+
+<!-- Projects -->
+<div style="background:#fff; border:1px solid var(--border); padding:2rem;">
+    <div class="flex items-center justify-between" style="margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border);">
+        <span style="font-size:0.75rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted);">Your Projects</span>
+    </div>
+
+    {% if projects %}
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:1px; background:var(--border);">
+        {% for project in projects %}
+        <a href="/projects/{{ project.id }}" style="text-decoration:none; display:block; background:#fff;">
+            <div style="transition:background 0.15s;" onmouseover="this.style.background='#f8f8f8'" onmouseout="this.style.background='#fff'">
+
+                <!-- Thumbnail or placeholder -->
+                {% if project.thumbnail %}
+                <div style="width:100%; height:180px; overflow:hidden; background:var(--bg-3);">
+                    <img src="/uploads/thumbnails/{{ project.thumbnail }}"
+                         alt="{{ project.title }}"
+                         style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.3s;"
+                         onmouseover="this.style.transform='scale(1.03)'"
+                         onmouseout="this.style.transform='scale(1)'">
+                </div>
+                {% else %}
+                <div style="width:100%; height:180px; background:var(--bg-2); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border);">
+                    <span style="font-size:0.68rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#ccc;">No Preview</span>
+                </div>
+                {% endif %}
+
+                <!-- Card content -->
+                <div style="padding:1.2rem 1.4rem;">
+                    <div class="flex items-center justify-between" style="margin-bottom:0.7rem;">
+                        <span class="badge {% if project.status == 'active' %}badge-green{% elif project.status == 'draft' %}badge-gray{% else %}badge-blue{% endif %}">{{ project.status }}</span>
+                        <span style="font-size:0.7rem; color:var(--text-muted);">{{ project.files|length }} file{% if project.files|length != 1 %}s{% endif %}</span>
+                    </div>
+                    <div style="font-size:1rem; font-weight:600; color:var(--text); margin-bottom:0.4rem; letter-spacing:-0.2px; line-height:1.3;">{{ project.title }}</div>
+                    {% if project.description %}
+                    <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.6; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ project.description }}</div>
+                    {% endif %}
+                    {% if project.category %}
+                    <div style="margin-top:0.9rem; padding-top:0.8rem; border-top:1px solid var(--border);">
+                        <span class="badge badge-gray">{{ project.category }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:5rem 2rem; border:1px dashed var(--border);">
+        <div style="font-size:1.5rem; font-weight:600; letter-spacing:-0.5px; margin-bottom:0.5rem;">No projects yet.</div>
+        <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom:2rem;">Create your first project to get started.</div>
+        <a href="/projects/new" class="btn btn-black">+ New Project</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

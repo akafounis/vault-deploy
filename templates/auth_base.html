@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vault Partners{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            background: #fdfdfd; color: #292929;
+            min-height: 100vh; display: flex;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .auth-split { display: flex; width: 100%; }
+
+        /* Left: mirrors the landing page feel */
+        .auth-left {
+            flex: 1;
+            background: #000;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 3rem 4rem; position: relative; overflow: hidden;
+        }
+        .auth-left-brand a {
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 2px;
+            text-transform: uppercase; color: #fff; text-decoration: none;
+        }
+        .auth-left-body { padding: 4rem 0 2rem; }
+        .auth-headline {
+            font-size: 3.5rem; font-weight: 600;
+            letter-spacing: -2px; line-height: 1.1;
+            color: #fff; margin-bottom: 1.5rem;
+        }
+        .auth-sub {
+            font-size: 1.1rem; color: rgba(255,255,255,0.5);
+            line-height: 1.8; max-width: 380px; font-weight: 300;
+        }
+        .auth-left-footer {
+            font-size: 0.75rem; font-weight: 600;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* Right: form panel */
+        .auth-right {
+            width: 460px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 3rem;
+            background: #fff;
+            border-left: 1px solid #e0e0e0;
+        }
+        .auth-box { width: 100%; max-width: 340px; }
+
+        .auth-box h2 {
+            font-size: 1.5rem; font-weight: 600;
+            letter-spacing: -0.5px; margin-bottom: 0.4rem;
+        }
+        .auth-desc {
+            color: #888; font-size: 0.9rem; margin-bottom: 2rem; font-weight: 400;
+        }
+
+        .form-group { margin-bottom: 1rem; }
+        label {
+            display: block; font-size: 0.7rem; font-weight: 600;
+            color: #888; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 5px;
+        }
+        input {
+            width: 100%; background: #f8f8f8; border: 1px solid #e0e0e0;
+            color: #292929; padding: 0.7rem 0.85rem;
+            font-size: 0.9rem; font-family: inherit;
+            transition: border-color 0.15s; outline: none;
+            border-radius: 0; -webkit-appearance: none;
+        }
+        input:focus { border-color: #000; background: #fff; }
+        input::placeholder { color: #bbb; }
+
+        .btn-submit {
+            display: block; width: 100%; padding: 0.8rem;
+            background: #000; color: #fff; border: none;
+            font-size: 0.75rem; font-weight: 600;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            cursor: pointer; font-family: inherit;
+            transition: background 0.2s; margin-top: 0.5rem;
+        }
+        .btn-submit:hover { background: #333; }
+
+        .form-link {
+            display: block; text-align: right;
+            font-size: 0.78rem; color: #888; text-decoration: none;
+            margin-bottom: 1.3rem; transition: color 0.15s;
+        }
+        .form-link:hover { color: #000; }
+
+        .form-footer {
+            text-align: center; margin-top: 1.5rem;
+            font-size: 0.82rem; color: #888;
+        }
+        .form-footer a { color: #000; text-decoration: none; font-weight: 500; }
+        .form-footer a:hover { opacity: 0.6; }
+
+        .back-link {
+            display: inline-block; margin-top: 1.5rem;
+            font-size: 0.78rem; color: #888; text-decoration: none;
+        }
+        .back-link:hover { color: #000; }
+
+        .alert { padding: 0.7rem 0.9rem; font-size: 0.85rem; margin-bottom: 1.2rem; }
+        .alert-error   { background: rgba(192,57,43,0.06); border: 1px solid rgba(192,57,43,0.2); color: #a93226; }
+        .alert-success { background: rgba(39,174,96,0.06); border: 1px solid rgba(39,174,96,0.2); color: #1e8449; }
+
+        @media (max-width: 860px) {
+            .auth-left { display: none; }
+            .auth-right { width: 100%; border: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="auth-split">
+    <div class="auth-left">
+        <div class="auth-left-brand"><a href="/">Vault Partners</a></div>
+        <div class="auth-left-body">
+            <h1 class="auth-headline">{% block auth_headline %}Ideas.<br>People.<br>Growth.{% endblock %}</h1>
+            <p class="auth-sub">{% block auth_sub %}A private network for 360° growth. Connection is a craft — it starts when the right people meet.{% endblock %}</p>
+        </div>
+        <div class="auth-left-footer">Private Access · Modern Business Network</div>
+    </div>
+    <div class="auth-right">
+        <div class="auth-box">
+            {% block auth_content %}{% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
